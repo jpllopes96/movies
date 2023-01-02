@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import "./styles.css"
+import { toast } from 'react-toastify'
 
 function Movie(){
+    const navigation = useNavigate();
     const {id} = useParams();
     const [movie, setMovie] = useState([])
+    const [movies, setMovies] = useState([]);
+    const [btn, setBtn] = useState(false)
     const [loading, setLoading] = useState(true)
 
     useEffect( ()=>{
@@ -22,15 +26,68 @@ function Movie(){
             })
             .catch((error)=>{
                 console.log("erro")
+                navigation("/", { replace: true})
+                return;
             })
+            
         }
 
+        function checkMovie(){
+            
+            const myMovies = localStorage.getItem("@primeflix")
+
+            let savedMovies = JSON.parse(myMovies) || [];
+            setMovies(savedMovies)
+            const hasMovie = savedMovies.some((moviesSaved) =>  {
+                 return moviesSaved.id === movie.id 
+            })
+
+            if(hasMovie){
+                setBtn(true)
+                return;
+            }
+        }
+
+       
+
         loadMovie();
-    
+        checkMovie();
        
     
-    },)
+    }, [id, movie, btn, movies])
 
+    function saveMovie(){
+       const myMovies = localStorage.getItem("@primeflix")
+
+       let savedMovies = JSON.parse(myMovies) || [];
+
+       const hasMovie = savedMovies.some((moviesSaved) =>  {
+            return moviesSaved.id === movie.id 
+       })
+
+       if(hasMovie){
+        setBtn(true)
+        toast.warn("This movie is already on the list")
+        return;
+       }
+
+       savedMovies.push(movie)
+       localStorage.setItem("@primeflix", JSON.stringify(savedMovies))
+
+       toast.success("Movie added!")
+
+    }
+
+    function removeMovie(id){
+        let filterMovies = movies.filter((item)=> {
+            return (item.id !== id)
+        } )
+
+        toast.error("Movie removed")
+        setMovie(filterMovies)
+        localStorage.setItem("@primeflix", JSON.stringify(filterMovies))
+        setBtn(false)
+    }
     if(loading){
         return(
             <div className="movieInfo">
@@ -46,8 +103,13 @@ function Movie(){
             <span>{movie.overview}</span>
             <strong>Rating: {movie.vote_average} / 10</strong>
             <div className="areaButtons">
-                <button>Save</button>
-                <button><a href="#">Trailler</a></button>
+                {btn === false ? (
+                    <button onClick={saveMovie}>Save</button>)
+                :
+                    (<button onClick={() => removeMovie(movie.id)}>Remove</button>)
+                }
+                
+                <button><a target="blank" rel="external" href={`https://youtube.com/results?search_query=${movie.title}`}>Trailler</a></button>
             </div>
         </div>
     )
