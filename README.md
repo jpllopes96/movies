@@ -15,7 +15,7 @@ https://sujeitoprogramador.com/
 https://api.themoviedb.org
 
 <div align="center">
-<img align="center" alt="MoviesHome" height="654px" width="320px" src="src/assets/imgs/movies.png">
+<img align="center" alt="MoviesHome" src="src/assets/imgs/movies.png">
 </div>
 
 <br/><br/>
