@@ -5,7 +5,7 @@ https://moviesreactclasses.netlify.app
 
 # Descripition 
 
-The project **NewMovies** is a project developed during **Sujeito Programador** classes. The porpouse of the application is to consume an API to list the movies on the poster, allowing the user to add/remove the movie from the favorite list.
+The project **NewMovies** is a project developed during **Sujeito Programador** classes. The purpose of the application is to consume an API to list the movies on the poster, allowing the user to add/remove the movie from the favorite list.
 
 
 **Sujeito Programador:**
